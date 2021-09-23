@@ -44,3 +44,14 @@ app.delete("/todos", (req, res) => {
 
   fs.writeFileSync("todos.json", JSON.stringify(formattedData));
 });
+app.put("/todos", (req, res) => {
+  const dataBase = JSON.parse(fs.readFileSync("todos.json", "utf-8"));
+  const data = req.body;
+  const newFreshDataBase = dataBase.todos.map((todo) => {
+    if (todo.id === data.idToBeUpdated) {
+      todo.todo = data.newTodo;
+    }
+    return todo;
+  });
+  fs.writeFileSync("todos.json", JSON.stringify({ todos: newFreshDataBase }));
+});
