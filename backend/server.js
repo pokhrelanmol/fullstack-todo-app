@@ -1,57 +1,50 @@
 const express = require("express");
-const uniqId = require("uniqid");
-const app = express();
-const fs = require("fs");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const Todos = require("./models/Todos");
 require("dotenv").config();
+
+const PORT = process.env.PORT | 3001;
+
+const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const PORT = process.env.PORT;
-const cors = require("cors");
 app.use(cors());
 
-app.listen(PORT, () => {
-  console.log(`server running at http://localhost:${PORT}`);
+app.get("/todos", async (req, res) => {
+  const todos = await Todos.find({});
+  res.json(todos);
 });
-
-app.get("/todos", (req, res) => {
-  fs.readFile("todos.json", "utf8", (err, data) => {
-    if (data) {
-      console.log(data);
-      res.json(JSON.parse(data));
-    } else {
-      res.json({ message: "no data found" });
-    }
-  });
-});
-
-app.post("/todos", (req, res) => {
-  if (req.body) {
-    const newTodo = req.body;
-
-    let dataBase = JSON.parse(fs.readFileSync("todos.json", "utf-8"));
-    dataBase.todos.push({ todo: newTodo.todo, id: newTodo.id });
-    fs.writeFileSync("todos.json", JSON.stringify(dataBase));
-    res.json(newTodo);
+app.get(`/todos/:id`, async (req, res) => {
+  const todo = await Todos.find({ _id: req.params.id });
+  if (todo) {
+    res.json(todo);
+  } else {
+    res.json({ message: "Not Found" });
   }
 });
 
-app.delete("/todos", (req, res) => {
-  const dataBase = JSON.parse(fs.readFileSync("todos.json", "utf-8"));
-  const newFreshDataBase = dataBase.todos.filter(
-    (todo) => todo.id !== req.body.idToBeDelete
-  );
-  const formattedData = { todos: newFreshDataBase };
+app.post("/todo", async (req, res) => {
+  console.log(req.body);
+  try {
+    await Todos.create({ todo: req.body.todo });
+    res.status(201).json({ success: true });
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).json({ success: false });
+  }
+});
+const MONGO_URL =
+  "mongodb+srv://anmol:anmol@todo-cluster.wshry.mongodb.net/todos?retryWrites=true&w=majority";
 
-  fs.writeFileSync("todos.json", JSON.stringify(formattedData));
-});
-app.put("/todos", (req, res) => {
-  const dataBase = JSON.parse(fs.readFileSync("todos.json", "utf-8"));
-  const data = req.body;
-  const newFreshDataBase = dataBase.todos.map((todo) => {
-    if (todo.id === data.idToBeUpdated) {
-      todo.todo = data.newTodo;
-    }
-    return todo;
-  });
-  fs.writeFileSync("todos.json", JSON.stringify({ todos: newFreshDataBase }));
-});
+mongoose
+  .connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() =>
+    app.listen(PORT, () =>
+      console.log(`server running on http//:localhost:${PORT}`)
+    )
+  )
+  .catch((err) => console.log(err));

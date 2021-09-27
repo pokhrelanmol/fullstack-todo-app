@@ -1,11 +1,11 @@
-import React from "react";
-
-const Modal = ({ isOpen, data, handleUpdate }) => {
-  const [modalOpen, setModalOpen] = React.useState(false);
+import React, { useEffect } from "react";
+import { actionTypes } from "./Reducer";
+const Modal = ({ isOpen, data, dispatch }) => {
+  const [modalOpen, setModalOpen] = React.useState(true);
   const [newTodo, setNewTodo] = React.useState("");
   React.useEffect(() => {
     setModalOpen(isOpen);
-    setNewTodo(data.todo);
+    setNewTodo(data ? data.todo : "");
   }, [isOpen, data]);
 
   if (modalOpen) {
@@ -27,8 +27,18 @@ const Modal = ({ isOpen, data, handleUpdate }) => {
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
         />
-        <button onClick={() => handleUpdate(newTodo, data.id)}>update</button>
-        <button onClick={() => setModalOpen(!modalOpen)}>cancel</button>
+        <button
+          onClick={() => {
+            dispatch({
+              type: actionTypes.UPDATE,
+              payload: { updatedTodo: newTodo, id: data.id },
+            });
+            setModalOpen(false);
+          }}
+        >
+          Update
+        </button>
+        <button onClick={() => setModalOpen(false)}>cancel</button>
       </div>
     );
   } else {

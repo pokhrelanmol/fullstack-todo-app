@@ -1,9 +1,11 @@
 import React from "react";
 import Todos from "../src/components/Todos";
+import Reducer from "../src/components/Reducer";
 function App() {
   return (
     <div>
-      <Todos />
+      <Reducer />
+      {/* <Todos /> */}
     </div>
   );
 }
