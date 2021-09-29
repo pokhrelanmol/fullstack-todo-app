@@ -4,6 +4,7 @@ const Todo = new mongoose.Schema(
     todo: {
       type: String,
       minLength: [3, "Length should be greater than 3"],
+      required: true,
     },
   },
   { timestamps: true }

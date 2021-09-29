@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { actionTypes } from "./Reducer";
+import { actionTypes } from "./Todos";
 const Modal = ({ isOpen, data, dispatch }) => {
   const [modalOpen, setModalOpen] = React.useState(true);
   const [newTodo, setNewTodo] = React.useState("");
@@ -31,7 +31,7 @@ const Modal = ({ isOpen, data, dispatch }) => {
           onClick={() => {
             dispatch({
               type: actionTypes.UPDATE,
-              payload: { updatedTodo: newTodo, id: data.id },
+              payload: { updatedTodo: newTodo, id: data._id },
             });
             setModalOpen(false);
           }}
