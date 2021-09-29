@@ -4,21 +4,23 @@ const registeredData = async (req, res) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
     const encryptedData = { ...req.body, password: hash };
-    const { firstname, lastname, email, password, mobilenumber, profession } =
-      encryptedData;
-    const formDetails = await RegistrationForm.create({
-      FirstName: firstname,
-      LastName: lastname,
-      Email: email,
-      MobileNumber: mobilenumber,
-      Profession: profession,
-      Password: password,
+    const { name, email, password, mobilenumber, profession } = encryptedData;
+    await RegistrationForm.create({
+      name,
+      email,
+      mobilenumber,
+      profession,
+      password,
     });
-    console.log(formDetails);
     res.json(encryptedData).status(201);
   } catch (error) {
-    console.log(error);
-    res.json({ status: "error" });
+    if (error.code === 11000) {
+      console.log("user exists in database");
+      return res
+        .json({ error: "username already exists in database" })
+        .status(500);
+    }
+    console.log(error.message);
   }
 };
 module.exports = { registeredData };

@@ -5,8 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "../css/registrationForm.css";
 const schema = yup.object().shape({
-  firstname: yup.string().required().min(2).max(30),
-  lastname: yup.string().required().min(2).max(32),
+  name: yup.string().required().min(2).max(30),
   email: yup.string().required().email(),
   password: yup.string().required().min(8).max(32),
   confirmpassword: yup
@@ -33,42 +32,32 @@ const RegistrationForm = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const onSubmitHandler = (data) => {
+  const onSubmitHandler = async (data) => {
     reset();
-    axios.post("http://localhost:3001/register", data);
+    const res = axios.post("http://localhost:3001/register", data);
+    if ((await res).statusText === "OK") {
+      alert(" user registered");
+    } else {
+      alert(JSON.stringify(res.data.error));
+    }
   };
   return (
     <div className="registration-main-div">
       <h2 className="heading">Register</h2>
       <form className="form" onSubmit={handleSubmit(onSubmitHandler)}>
-        <label className="control-label" htmlFor="firstName">
-          First Name
+        <label className="control-label" htmlFor="name">
+          Name
         </label>
         <div className="input-wrapper">
           <i className="fa fa-user"></i>
           <input
-            {...register("firstname")}
+            {...register("name")}
             type="text"
-            className="firstName"
-            placeholder="First Name"
+            className="name"
+            placeholder="Name"
           />
         </div>
-        <p>{errors.firstname?.message}</p>
-
-        <label className="control-label" htmlFor="lastName">
-          Last Name
-        </label>
-
-        <div className="input-wrapper">
-          <i className="fa fa-user"></i>
-          <input
-            {...register("lastname")}
-            type="text"
-            className="lastName"
-            placeholder="Last Name"
-          />
-        </div>
-        <p>{errors.lastname?.message}</p>
+        <p>{errors.name?.message}</p>
 
         <label className="control-label" htmlFor="lastName">
           Email
@@ -86,12 +75,11 @@ const RegistrationForm = () => {
         <p>{errors.email?.message}</p>
 
         <label className="control-label" htmlFor="mobileNumber">
-          {" "}
           Mobile Number
         </label>
 
         <div className="input-wrapper">
-          <i class="fas fa-phone"></i>
+          <i className="fas fa-phone"></i>
           <input
             {...register("mobilenumber")}
             type="text"
@@ -102,12 +90,11 @@ const RegistrationForm = () => {
         <p>{errors.mobilenumber?.message}</p>
 
         <label className="control-label" htmlFor="profession">
-          {" "}
           Profession
         </label>
 
         <div className="input-wrapper">
-          <i class="fas fa-user-tie"></i>
+          <i className="fas fa-user-tie"></i>
           <input
             {...register("profession")}
             type="text"
@@ -118,12 +105,11 @@ const RegistrationForm = () => {
         <p>{errors.profession?.message}</p>
 
         <label className="control-label" htmlFor="password">
-          {" "}
           Password
         </label>
 
         <div className="input-wrapper">
-          <i class="fas fa-lock"></i>
+          <i className="fas fa-lock"></i>
           <input
             {...register("password")}
             type="password"
@@ -134,12 +120,11 @@ const RegistrationForm = () => {
         <p>{errors.password?.message}</p>
 
         <label className="control-label" htmlFor="confirmPassword">
-          {" "}
           Confirm Password
         </label>
 
         <div className="input-wrapper">
-          <i class="fas fa-lock"></i>
+          <i className="fas fa-lock"></i>
           <input
             {...register("confirmpassword")}
             type="password"

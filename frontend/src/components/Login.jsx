@@ -1,12 +1,10 @@
 import React from "react";
-// import "../css/login.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import axios from "axios";
 import * as yup from "yup";
 const schema = yup.object().shape({
-  firstname: yup.string().required().min(2).max(30),
-  lastname: yup.string().required().min(2).max(32),
+  name: yup.string().required().min(2).max(30),
   password: yup.string().required().min(8).max(32),
 });
 const Login = () => {
@@ -18,7 +16,15 @@ const Login = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-  const onSubmitHandler = (data) => {
+  const onSubmitHandler = async (data) => {
+    const res = await axios.post("http://localhost:3001/login", data);
+    if ((res.statusText = "OK")) {
+      console.log(res.data.data);
+      alert("login successful");
+      window.location.href = "http://localhost:3000/";
+    } else {
+      alert("invalid username or password");
+    }
     console.log({ data });
     reset();
   };
@@ -28,36 +34,21 @@ const Login = () => {
       <h2 className="heading">Login</h2>
 
       <form className="form" onSubmit={handleSubmit(onSubmitHandler)}>
-        <label className="control-label" htmlFor="firstName">
-          First Name
+        <label className="control-label" htmlFor="Name">
+          Name
         </label>
         <div className="input-wrapper">
           <i className="fa fa-user"></i>
           <input
-            {...register("firstname")}
+            {...register("name")}
             type="text"
-            className="firstName"
-            placeholder="First Name"
+            className="Name"
+            placeholder="Name"
           />
         </div>
-        <p>{errors.firstname?.message}</p>
+        <p>{errors.name?.message}</p>
 
-        <label className="control-label" htmlFor="lastName">
-          Last Name
-        </label>
-
-        <div className="input-wrapper">
-          <i className="fa fa-user"></i>
-          <input
-            {...register("lastname")}
-            type="text"
-            className="lastName"
-            placeholder="Last Name"
-          />
-        </div>
-        <p>{errors.lastname?.message}</p>
         <label className="control-label" htmlFor="password">
-          {" "}
           Password
         </label>
 
