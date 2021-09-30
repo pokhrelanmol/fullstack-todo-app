@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const RegistrationForm = new mongoose.Schema(
   {
-    name: { type: "string", unique: true },
-    email: String,
+    name: String,
+    email: { type: String, unique: true },
     mobilenumber: Number,
     profession: String,
     password: String,

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -24,6 +25,7 @@ const schema = yup.object().shape({
 });
 
 const RegistrationForm = () => {
+  const history = useHistory();
   const {
     register,
     handleSubmit,
@@ -33,12 +35,19 @@ const RegistrationForm = () => {
     resolver: yupResolver(schema),
   });
   const onSubmitHandler = async (data) => {
-    reset();
-    const res = axios.post("http://localhost:3001/register", data);
-    if ((await res).statusText === "OK") {
-      alert(" user registered");
-    } else {
-      alert(JSON.stringify(res.data.error));
+    // storing data in database
+    try {
+      const res = await axios.post("http://localhost:3001/register", data);
+      alert("user registered");
+      history.push("/login");
+      reset();
+    } catch (err) {
+      const errRes = err.response;
+      if (errRes.status === 400) {
+        alert(errRes.data.error);
+      } else if (errRes.status === 500) {
+        alert(errRes.data.error);
+      }
     }
   };
   return (

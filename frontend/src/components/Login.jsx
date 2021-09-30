@@ -2,12 +2,14 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import * as yup from "yup";
 const schema = yup.object().shape({
   name: yup.string().required().min(2).max(30),
   password: yup.string().required().min(8).max(32),
 });
 const Login = () => {
+  const history = useHistory();
   const {
     register,
     handleSubmit,
@@ -17,16 +19,24 @@ const Login = () => {
     resolver: yupResolver(schema),
   });
   const onSubmitHandler = async (data) => {
-    const res = await axios.post("http://localhost:3001/login", data);
-    if ((res.statusText = "OK")) {
-      console.log(res.data.data);
-      alert("login successful");
-      window.location.href = "http://localhost:3000/";
-    } else {
-      alert("invalid username or password");
+    try {
+      const res = await axios.post("http://localhost:3001/login", data);
+      if (res.data.userToken) {
+        localStorage.setItem("token", res.data.userToken);
+        alert("login successfull");
+        history.push("/");
+        reset();
+      }
+    } catch (err) {
+      const errRes = err.response;
+      if (errRes.status === 400) {
+        alert(errRes.data.error);
+      } else if (errRes.status === 404) {
+        alert(errRes.data.error);
+      } else {
+        alert("Internal errors occured");
+      }
     }
-    console.log({ data });
-    reset();
   };
 
   return (
@@ -53,8 +63,9 @@ const Login = () => {
         </label>
 
         <div className="input-wrapper">
-          <i class="fas fa-lock"></i>
+          <i className="fas fa-lock"></i>
           <input
+            autoComplete="off"
             {...register("password")}
             type="password"
             className="password"

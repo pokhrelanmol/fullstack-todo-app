@@ -12,15 +12,15 @@ const registeredData = async (req, res) => {
       profession,
       password,
     });
+    console.log("user registered");
     res.json(encryptedData).status(201);
   } catch (error) {
     if (error.code === 11000) {
-      console.log("user exists in database");
       return res
-        .json({ error: "username already exists in database" })
-        .status(500);
+        .status(400)
+        .json({ error: "email already exists please try another email" });
     }
-    console.log(error.message);
+    res.status(500).json({ error: "we are sorry server is not responding" });
   }
 };
 module.exports = { registeredData };
