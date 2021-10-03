@@ -31,7 +31,7 @@ const Modal = ({ isOpen, data, dispatch }) => {
           onClick={() => {
             dispatch({
               type: actionTypes.UPDATE,
-              payload: { updatedTodo: newTodo, id: data._id },
+              payload: { updatedTodo: newTodo, id: data.id },
             });
             setModalOpen(false);
           }}

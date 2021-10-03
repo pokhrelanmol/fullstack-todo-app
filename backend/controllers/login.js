@@ -6,12 +6,12 @@ const loginData = async (req, res) => {
   try {
     const { name, password } = await req.body;
     const user = await RegistrationForm.findOne({
-      name,
+      username: name,
     }).lean();
     const checkPasword = await bcrypt.compare(password, user.password);
     if (checkPasword) {
       const token = jwt.sign(
-        { id: user._id, email: user.email },
+        { id: user._id, user: user.username },
         process.env.JWT_SECRET_KEY
       );
       return res.json({ status: "ok", userToken: token });

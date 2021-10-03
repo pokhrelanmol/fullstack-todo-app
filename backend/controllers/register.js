@@ -6,7 +6,7 @@ const registeredData = async (req, res) => {
     const encryptedData = { ...req.body, password: hash };
     const { name, email, password, mobilenumber, profession } = encryptedData;
     await RegistrationForm.create({
-      name,
+      username: name,
       email,
       mobilenumber,
       profession,
@@ -18,7 +18,7 @@ const registeredData = async (req, res) => {
     if (error.code === 11000) {
       return res
         .status(400)
-        .json({ error: "email already exists please try another email" });
+        .json({ error: "user already exists please try another username" });
     }
     res.status(500).json({ error: "we are sorry server is not responding" });
   }
