@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=Source+Sans+Pro:wght@200;300;400;600&display=swap");
 
 .main-container {
-  width: 30vw;
+  width: 50vw;
   min-height: 60vh;
   margin: 0 auto;
   border: 3px solid gray;
@@ -57,4 +57,10 @@ li::marker {
   width: 10rem;
   display: flex;
   justify-content: space-evenly;
+}
+/* responsive code  */
+@media (max-width: 780px) {
+  .main-container {
+    width: 100%;
+  }
 }
