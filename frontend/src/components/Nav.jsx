@@ -8,14 +8,12 @@ const Nav = () => {
     localStorage.removeItem("token");
   };
   const location = useLocation();
-  console.log(location);
   return (
     <nav>
       <NavLink className="nav-link" to="/">
         Home
       </NavLink>
       <NavLink className="nav-link" to="/register">
-        {" "}
         Register
       </NavLink>
       <NavLink onClick={handleLogout} className="nav-link" to="/login">
@@ -24,6 +22,9 @@ const Nav = () => {
           : location.pathname === "/register"
           ? "Login"
           : "Logout"}
+      </NavLink>
+      <NavLink className="nav-link" to="/change-password">
+        ChangePassword
       </NavLink>
     </nav>
   );

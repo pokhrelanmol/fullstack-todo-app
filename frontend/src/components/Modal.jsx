@@ -45,5 +45,4 @@ const Modal = ({ isOpen, data, dispatch }) => {
     return null;
   }
 };
-
 export default Modal;

@@ -1,15 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
 const schema = yup.object().shape({
-  name: yup.string().required().min(2).max(30),
-  password: yup.string().required().min(8).max(32),
+  oldpassword: yup.string().required().min(8).max(30),
+  newpassword: yup.string().required().min(8).max(32),
 });
-const Login = () => {
+const ChangePassword = () => {
   const history = useHistory();
   const {
     register,
@@ -21,14 +20,21 @@ const Login = () => {
   });
   const onSubmitHandler = async (data) => {
     try {
-      const res = await axios.post("http://localhost:3001/login", data);
-      if (res.data.userToken) {
-        localStorage.setItem("token", res.data.userToken);
-        alert("login successfull");
-        history.push("/");
-        reset();
+      const res = await axios.post(
+        "http://localhost:3001/change-password",
+        data,
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("token"),
+          },
+        }
+      );
+      if (res.status === 200) {
+        alert(res.data.message);
+        history.push("/login");
       }
     } catch (err) {
+      console.log(err);
       const errRes = err.response;
       if (errRes.status === 400) {
         alert(errRes.data.error);
@@ -46,40 +52,40 @@ const Login = () => {
 
       <form className="form" onSubmit={handleSubmit(onSubmitHandler)}>
         <label className="control-label" htmlFor="Name">
-          Name
+          Old Password
         </label>
         <div className="input-wrapper">
-          <i className="fa fa-user"></i>
+          <i className="fa fa-lock"></i>
           <input
-            {...register("name")}
+            {...register("oldpassword")}
             type="text"
             className="Name"
-            placeholder="Name"
+            placeholder="Old Password"
           />
         </div>
-        <p>{errors.name?.message}</p>
+        <p>{errors.oldpassword?.message}</p>
 
         <label className="control-label" htmlFor="password">
-          Password
+          New Password
         </label>
 
         <div className="input-wrapper">
           <i className="fas fa-lock"></i>
           <input
             autoComplete="off"
-            {...register("password")}
+            {...register("newpassword")}
             type="password"
             className="password"
-            placeholder="Password"
+            placeholder="New Password"
           />
         </div>
-        <p>{errors.password?.message}</p>
+        <p>{errors.newpassword?.message}</p>
         <button type="submit" className="submit-button">
-          Login
+          Change
         </button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default ChangePassword;
