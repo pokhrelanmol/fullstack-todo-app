@@ -21,7 +21,7 @@ const ChangePassword = () => {
   const onSubmitHandler = async (data) => {
     try {
       const res = await axios.post(
-        "http://localhost:3001/change-password",
+        "https://makeyourlists.herokuapp.com/change-password",
         data,
         {
           headers: {

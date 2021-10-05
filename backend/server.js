@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use("/todos", todosRoutes);
+app.use("/", todosRoutes);
 app.use("/register", registerRoute);
 app.use("/login", loginRoute);
 app.use("/change-password", changePasswordRoute);
