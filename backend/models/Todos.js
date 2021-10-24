@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 const Todo = new mongoose.Schema(
   {
-    username: String,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "RegitrationForm",
+    },
     todo: {
       type: String,
-
       minLength: [3, "Length should be greater than 3"],
       required: true,
     },

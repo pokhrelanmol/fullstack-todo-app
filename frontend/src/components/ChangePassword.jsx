@@ -14,14 +14,13 @@ const ChangePassword = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
   const onSubmitHandler = async (data) => {
     try {
       const res = await axios.post(
-        "https://makeyourlists.herokuapp.com/change-password",
+        "http://localhost:3001/change-password",
         data,
         {
           headers: {
@@ -48,7 +47,7 @@ const ChangePassword = () => {
 
   return (
     <div className="container">
-      <h2 className="heading">Login</h2>
+      <h2 className="heading">Change Password</h2>
 
       <form className="form" onSubmit={handleSubmit(onSubmitHandler)}>
         <label className="control-label" htmlFor="Name">

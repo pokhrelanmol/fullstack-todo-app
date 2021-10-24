@@ -20,6 +20,7 @@ const registeredData = async (req, res) => {
         .status(400)
         .json({ error: "user already exists please try another username" });
     }
+    console.log(error);
     res.status(500).json({ error: "we are sorry server is not responding" });
   }
 };

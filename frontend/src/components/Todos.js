@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer } from "react";
 import Todos from "./Todo";
 import axios from "axios";
 import Modal from "./Modal";
@@ -36,7 +36,7 @@ const reducer = (state, action) => {
         const todoToBePosted = action.payload;
         axios
           .post(
-            "https://makeyourlists.herokuapp.com/",
+            "https://makeyourlists.heroku.com",
             { data: todoToBePosted },
             {
               headers: {
@@ -45,7 +45,6 @@ const reducer = (state, action) => {
             }
           )
           .then(() => console.log("todo posted"));
-        console.log([...state.todos[0].todo]);
         return {
           ...state,
           todos: [...state.todos, { todo: todoToBePosted }],
@@ -82,7 +81,6 @@ const reducer = (state, action) => {
           newTodo: action.payload.updatedTodo,
         })
         .then((data) => {
-          console.log(data);
           alert("todo updated");
         })
         .catch((err) => console.error(err));

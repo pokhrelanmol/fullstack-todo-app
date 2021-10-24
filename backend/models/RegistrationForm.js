@@ -12,4 +12,4 @@ const RegistrationForm = new mongoose.Schema(
 
 module.exports =
   mongoose.models.RegistrationForm ||
-  mongoose.model("RegistrationDetails", RegistrationForm);
+  mongoose.model("RegistrationForm", RegistrationForm);
