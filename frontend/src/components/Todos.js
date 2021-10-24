@@ -36,7 +36,7 @@ const reducer = (state, action) => {
         const todoToBePosted = action.payload;
         axios
           .post(
-            "https://makeyourlists.heroku.com",
+            "https://makeyourlists.herokuapp.com/",
             { data: todoToBePosted },
             {
               headers: {
